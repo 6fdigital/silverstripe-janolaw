@@ -1,0 +1,26 @@
+{
+    "name": "6fdigital/silverstripe-janolaw",
+    "description": "A Silverstripe module for the integration of Janolaw content",
+    "type": "silverstripe-vendormodule",
+    "keywords": [
+        "silverstripe",
+        "cms",
+        "legal",
+        "terms",
+        "janolaw"
+    ],
+    "license": "MIT",
+    "require": {
+        "silverstripe/cms": ">4"
+    },
+    "authors": [{
+        "name": "Marco Kernler",
+        "email": "marco.kernler@6f.digital"
+    }],
+    "minimum-stability": "dev",
+    "autoload": {
+        "psr-4": {
+            "SixF\\Janolaw\\": "src"
+        }
+    }
+}

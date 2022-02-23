@@ -1,0 +1,17 @@
+---
+Name: janolaw
+---
+
+SilverStripe\SiteConfig\SiteConfig:
+  extensions:
+    - SixF\Janolaw\Extension\JanolawSiteConfig
+
+#SilverStripe\CMS\Controllers\ContentController:
+#  extensions:
+#    - SixF\Janolaw\Extension\JanolawContentControllerExtension
+
+SilverStripe\Core\Injector\Injector:
+  PageController:
+    class: SixF\Janolaw\Control\JanolawPageController
+
+

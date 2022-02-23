@@ -1,0 +1,15 @@
+de:
+  SixF\Janolaw\Extension\JanolawSiteConfig:
+    TAB_TITLE: "Janolaw"
+    USERID: "Ihre Benutzer ID"
+    SHOPID: "Ihre Shop ID"
+    CACHE_TIME: "Vorhaltezeit (h)"
+    API_VERSION: "Version der Schnittstelle"
+    SYNC_DOCUMENT_FILES: "Dokumentendateien synchronisieren?"
+
+    TERMS_PAGE: "AGB Seite"
+    IMPRINT_PAGE: "Impressum Seite"
+    REVOCATION_PAGE: "Widerrufsbelehrung Seite"
+    PRIVACY_PAGE: "Datenschutz Seite"
+    REVOCATION_FORM_PAGE: "Widerrufsbelehrung Formular Seite"
+    ASSETS_FOLDER: "Ordner für Dokumente"
