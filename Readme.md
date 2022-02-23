@@ -1,7 +1,7 @@
 # Silverstripe Janolaw
 
 ## Introduction
-The module grant you access to the API provided by the Janolaw AG. This allows
+The module grants you access to the API provided by the Janolaw AG. This allows
 you to import the contents of the documents you created within your user account
 at Janolaw:
 
@@ -12,7 +12,7 @@ at Janolaw:
 * Model Withdrawal-Form
 
 ## ToDo
-- Fetch Documents
+At the moment only fetching the contents in html format are supported.
 
 ## Requirements
 SilverStripe 4+
