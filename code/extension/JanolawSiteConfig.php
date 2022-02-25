@@ -32,11 +32,6 @@ use SixF\Janolaw\Control\JanolawClient;
 class JanolawSiteConfig extends DataExtension
 {
   /**
-   * @var string
-   */
-  private static $default_cache_time = "8";
-
-  /**
    * @var string[]
    */
   private static $db = [
@@ -60,6 +55,10 @@ class JanolawSiteConfig extends DataExtension
     "JanolawAssetsFolder" => Folder::class,
   ];
 
+  private static $defaults = [
+    "JanolawCacheTime" => 12,
+  ];
+
   /**
    * @param SiteConfig $config
    * @return bool
@@ -77,15 +76,18 @@ class JanolawSiteConfig extends DataExtension
    * @param SiteConfig $config
    * @return bool
    */
-  public static function must_update(SiteConfig $config): bool
+  public static function must_sync(SiteConfig $config): bool
   {
     //
+    if (!self::has_valid_config($config)) return false;
+
+    // sync if not synced yet
     if (!$config->JanolawLastSync) return true;
 
     //
     $now = new DateTime();
     $nextSync = new DateTime($config->JanolawLastSync);
-    $nextSync->add(self::cache_time_interval());
+    $nextSync->add($config->CacheTimeInterval());
 
     // Injector::inst()->get(LoggerInterface::class)->debug(sprintf("now: %s | lastSync: %s | nextSync: %s | elapsed: %s", $now->format('Y-m-d H:i:s'), $config->JanolawLastSync, $nextSync->format('Y-m-d H:i:s'), ($now > $nextSync ? "true" : "false")));
 
@@ -95,10 +97,9 @@ class JanolawSiteConfig extends DataExtension
   /**
    * @throws Exception
    */
-  protected static function cache_time_interval(): DateInterval
+  public function CacheTimeInterval(): DateInterval
   {
-    $defaultCacheTime = Config::inst()->get(self::class, "default_cache_time");
-    return new DateInterval(sprintf("PT%sH", $defaultCacheTime));
+    return new DateInterval(sprintf("PT%sH", $this->owner->JanolawCacheTime));
   }
 
 
@@ -127,40 +128,37 @@ class JanolawSiteConfig extends DataExtension
    */
   public function updateCMSFields(FieldList $fieldList)
   {
-    //
+    // tab
     $tabTitle = _t("SixF\Janolaw\Extension\JanolawSiteConfig.TAB_TITLE", "Janolaw");
 
     // create the cache time textfield
-    $txtCacheTime = new TextField("JanolawCacheTime", _t('SixF\Janolaw\Extension\JanolawSiteConfig.CACHE_TIME', 'Cache Time'));
-    // populate the field with the default value if empty
-    if (strlen($this->owner->CacheTime) == 0) {
-      $txtCacheTime->setAttribute("value", Config::inst()->get(JanolawSiteConfig::class, "default_cache_time"));
-    }
+    $txtCacheTime = TextField::create("JanolawCacheTime", _t('SixF\Janolaw\Extension\JanolawSiteConfig.CACHE_TIME', 'Cache Time'));
 
-    //
-    $txtApiVersion = new TextField("JanolawAPIVersion", _t('SixF\Janolaw\Extension\JanolawSiteConfig.API_VERSION', 'API Version'));
+    // api-version
+    $txtApiVersion = TextField::create("JanolawAPIVersion", _t('SixF\Janolaw\Extension\JanolawSiteConfig.API_VERSION', 'API Version'));
     $txtApiVersion->setDisabled(true);
 
+    //
     $txtLastSync = DatetimeField::create("JanolawLastSync", "");
     $txtLastSync->setDisabled(true);
 
     //
     $fieldList->addFieldsToTab("Root." . $tabTitle, [
-      new TextField("JanolawUserID", _t('SixF\Janolaw\Extension\JanolawSiteConfig.USERID', 'User ID')),
-      new TextField("JanolawShopID", _t('SixF\Janolaw\Extension\JanolawSiteConfig.SHOPID', 'Shop ID')),
+      TextField::create("JanolawUserID", _t('SixF\Janolaw\Extension\JanolawSiteConfig.USERID', 'User ID')),
+      TextField::create("JanolawShopID", _t('SixF\Janolaw\Extension\JanolawSiteConfig.SHOPID', 'Shop ID')),
       $txtCacheTime,
       $txtApiVersion,
       $txtLastSync,
-      new CheckboxField("JanolawSyncDocumentFiles", _t('SixF\Janolaw\Extension\JanolawSiteConfig.SYNC_DOCUMENT_FILES', 'Sync document files?')),
+      CheckboxField::create("JanolawSyncDocumentFiles", _t('SixF\Janolaw\Extension\JanolawSiteConfig.SYNC_DOCUMENT_FILES', 'Sync document files?')),
 
-      new LiteralField("Line1", "<p>&nbsp;</p>"),
+      LiteralField::create("Line1", "<p>&nbsp;</p>"),
 
-      new TreeDropdownField("JanolawTermsPageID", _t('SixF\Janolaw\Extension\JanolawSiteConfig.TERMS_PAGE', 'Terms Page'), SiteTree::class),
-      new TreeDropdownField("JanolawImprintPageID", _t('SixF\Janolaw\Extension\JanolawSiteConfig.IMPRINT_PAGE', 'Imprint Page'), SiteTree::class),
-      new TreeDropdownField("JanolawRevocationPageID", _t('SixF\Janolaw\Extension\JanolawSiteConfig.REVOCATION_PAGE', 'Revocation Page'), SiteTree::class),
-      new TreeDropdownField("JanolawPrivacyPageID", _t('SixF\Janolaw\Extension\JanolawSiteConfig.PRIVACY_PAGE', 'Privacy Page'), SiteTree::class),
-      new TreeDropdownField("JanolawRevocationFormPageID", _t('SixF\Janolaw\Extension\JanolawSiteConfig.REVOCATION_FORM_PAGE', 'Revocation Form Page'), SiteTree::class),
-      new TreeDropdownField("JanolawAssetsFolderID", _t('SixF\Janolaw\Extension\JanolawSiteConfig.ASSETS_FOLDER', 'Assets Folder'), Folder::class),
+      TreeDropdownField::create("JanolawTermsPageID", _t('SixF\Janolaw\Extension\JanolawSiteConfig.TERMS_PAGE', 'Terms Page'), SiteTree::class),
+      TreeDropdownField::create("JanolawImprintPageID", _t('SixF\Janolaw\Extension\JanolawSiteConfig.IMPRINT_PAGE', 'Imprint Page'), SiteTree::class),
+      TreeDropdownField::create("JanolawRevocationPageID", _t('SixF\Janolaw\Extension\JanolawSiteConfig.REVOCATION_PAGE', 'Revocation Page'), SiteTree::class),
+      TreeDropdownField::create("JanolawPrivacyPageID", _t('SixF\Janolaw\Extension\JanolawSiteConfig.PRIVACY_PAGE', 'Privacy Page'), SiteTree::class),
+      TreeDropdownField::create("JanolawRevocationFormPageID", _t('SixF\Janolaw\Extension\JanolawSiteConfig.REVOCATION_FORM_PAGE', 'Revocation Form Page'), SiteTree::class),
+      TreeDropdownField::create("JanolawAssetsFolderID", _t('SixF\Janolaw\Extension\JanolawSiteConfig.ASSETS_FOLDER', 'Assets Folder'), Folder::class),
     ]);
   }
 
@@ -170,7 +168,7 @@ class JanolawSiteConfig extends DataExtension
     parent::onAfterWrite();
 
     //
-    if (self::has_valid_config($this->owner) && self::must_update($this->owner)) {
+    if (self::must_sync($this->owner)) {
       //
       $this->Sync();
     }

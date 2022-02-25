@@ -28,7 +28,8 @@ class JanolawClient
   public const FILE_TYPE_PDF = "pdf";
 
 
-  protected function _documentUrl(string $docType, string $fileType, string $language): string {
+  protected function _documentUrl(string $docType, string $fileType, string $language): string
+  {
     //
     $config = SiteConfig::current_site_config();
     $baseUrl = Config::inst()->get(JanolawClient::class, "base_url"); //$this->config()->get("base_urL"); //Config::inst()->get("JanolawClient", "base_url");
@@ -48,10 +49,10 @@ class JanolawClient
   /**
    * @throws Exception|\GuzzleHttp\Exception\GuzzleException
    */
-  protected function _request($url): ?string {
+  protected function _request($url): ?string
+  {
 
-    Injector::inst()->get(LoggerInterface::class)->debug("url: ". $url);
-
+    // Injector::inst()->get(LoggerInterface::class)->debug("url: " . $url);
 
     try {
       if (!$url || strlen($url) === 0) {
@@ -73,70 +74,80 @@ class JanolawClient
     }
   }
 
-  public function getTermsHtml(): ?string {
+  public function getTermsHtml(): ?string
+  {
     //
     $url = $this->_documentUrl(self::DOC_TYPE_TERMS, self::FILE_TYPE_HTML, "de");
 
     return $this->_request($url);
   }
 
-  public function getImprintHtml(): ?string {
+  public function getImprintHtml(): ?string
+  {
     //
     $url = $this->_documentUrl(self::DOC_TYPE_IMPRINT, self::FILE_TYPE_HTML, "de");
 
     return $this->_request($url);
   }
 
-  public function getRevocationHtml(): ?string {
+  public function getRevocationHtml(): ?string
+  {
     //
     $url = $this->_documentUrl(self::DOC_TYPE_REVOCATION, self::FILE_TYPE_HTML, "de");
 
     return $this->_request($url);
   }
 
-  public function getPrivacyHtml(): ?string {
+  public function getPrivacyHtml(): ?string
+  {
     //
     $url = $this->_documentUrl(self::DOC_TYPE_PRIVACY, self::FILE_TYPE_HTML, "de");
 
     return $this->_request($url);
   }
 
-  public function getRevocationFormHtml(): ?string {
+  public function getRevocationFormHtml(): ?string
+  {
     //
     $url = $this->_documentUrl(self::DOC_TYPE_REVOCATION_FORM, self::FILE_TYPE_HTML, "de");
 
     return $this->_request($url);
   }
 
-  public function getTermsPdf(): ?string {
+  public function getTermsPdf(): ?string
+  {
     //
     $url = $this->_documentUrl(self::DOC_TYPE_TERMS, self::FILE_TYPE_PDF, "de");
 
     return $this->_request($url);
   }
 
-  public function getImprintPdf(): ?string {
+  public function getImprintPdf(): ?string
+  {
     //
     $url = $this->_documentUrl(self::DOC_TYPE_IMPRINT, self::FILE_TYPE_PDF, "de");
 
     return $this->_request($url);
   }
 
-  public function getRevocationPdf(): ?string {
+  public function getRevocationPdf(): ?string
+  {
     //
     $url = $this->_documentUrl(self::DOC_TYPE_REVOCATION, self::FILE_TYPE_PDF, "de");
 
     return $this->_request($url);
   }
 
-  public function getPrivacyPdf(): ?string {
+  public function getPrivacyPdf(): ?string
+  {
     //
     $url = $this->_documentUrl(self::DOC_TYPE_PRIVACY, self::FILE_TYPE_PDF, "de");
 
     return $this->_request($url);
   }
 
-  public function getRevocationFormPdf(): ?string {
+  public function getRevocationFormPdf(): ?string
+  {
     //
     $url = $this->_documentUrl(self::DOC_TYPE_REVOCATION_FORM, self::FILE_TYPE_PDF, "de");
 
