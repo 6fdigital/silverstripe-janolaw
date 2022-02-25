@@ -32,4 +32,4 @@ SilverStripe 4+
 1. Visit the settings under Settings > Janolaw
 2. Provide the User and ShopID
 3. [Optional] Provide the default cache time for the content in hours (defaults to 8h)
-4. Now chose your pages for the appropriate content-type 
+4. Now chose your pages for the appropriate content-type
